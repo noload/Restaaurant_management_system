@@ -7,10 +7,18 @@ router.post("/add-order", authMiddleware, async (req, res) => {
   const order = await Order.create({ ...req.body });
 
   if (!order) {
-    res.send("something went wrong");
+    res.status(404).json({
+      success: false,
+      message: "Order not created ",
+      data: [],
+    });
   }
 
-  res.send("order created");
+  res.status(200).json({
+    success: true,
+    message: "Order created successfully",
+    order,
+  });
 });
 
 router.get("/get-order/:user_id", async (req, res) => {
@@ -18,9 +26,15 @@ router.get("/get-order/:user_id", async (req, res) => {
   const orders = await Order.find({ user_id });
 
   if (!orders) {
-    res.send("Not found order");
+    res.status(404).json({
+      success: false,
+      message: "Orders Not Found",
+      data: [],
+    });
   }
   res.status(200).json({
+    success: true,
+    message: "Fetched all order for specific user",
     orders,
   });
 });
